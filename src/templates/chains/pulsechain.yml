@@ -1,0 +1,5 @@
+defaultNetwork: pulsechain
+defaultWallet: '<pulsechain-wallet-address>'
+
+# RPC provider: 'url' uses nodeURL from network config
+rpcProvider: url

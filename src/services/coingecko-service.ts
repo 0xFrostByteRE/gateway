@@ -325,7 +325,7 @@ export class CoinGeckoService {
     // Determine chain type from chainNetwork
     const chain = chainNetwork.split('-')[0];
 
-    if (chain === 'ethereum') {
+    if (chain === 'ethereum' || chain === 'pulsechain') {
       return EVM_REGEX.test(tokenAddress);
     } else if (chain === 'solana') {
       return SOLANA_REGEX.test(tokenAddress);

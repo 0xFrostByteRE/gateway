@@ -12,6 +12,7 @@ import { quoteSwap as pancakeswapAmmQuoteSwap } from '../../connectors/pancakesw
 import { quoteSwap as pancakeswapClmmQuoteSwap } from '../../connectors/pancakeswap/clmm-routes/quoteSwap';
 import { quoteSwap as pancakeswapRouterQuoteSwap } from '../../connectors/pancakeswap/router-routes/quoteSwap';
 import { quoteSwap as pancakeswapSolClmmQuoteSwap } from '../../connectors/pancakeswap-sol/clmm-routes/quoteSwap';
+import { quoteSwap as pulsexAmmQuoteSwap } from '../../connectors/pulsex/amm-routes/quoteSwap';
 import { quoteSwap as raydiumAmmQuoteSwap } from '../../connectors/raydium/amm-routes/quoteSwap';
 import { quoteSwap as raydiumClmmQuoteSwap } from '../../connectors/raydium/clmm-routes/quoteSwap';
 
@@ -225,6 +226,10 @@ async function getEthereumQuoteSwap(
       return await pancakeswapClmmQuoteSwap(network, poolAddress!, baseToken, quoteToken, amount, side, slippagePct);
     } else if (providerKey === '0x/router') {
       return await zeroXRouterQuoteSwap(network, baseToken, quoteToken, amount, side, slippagePct || 1);
+    } else if (providerKey === 'pulsex/amm') {
+      return await pulsexAmmQuoteSwap(network, poolAddress!, baseToken, quoteToken, amount, side, slippagePct);
+    } else if (providerKey === 'pulsex/router') {
+      return await pulsexAmmQuoteSwap(network, poolAddress!, baseToken, quoteToken, amount, side, slippagePct);
     }
 
     throw httpErrors.badRequest(`Unsupported swap provider: ${swapProvider}`);

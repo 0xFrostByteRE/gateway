@@ -5,6 +5,7 @@
 import { FastifyInstance } from 'fastify';
 
 import { Ethereum } from '../chains/ethereum/ethereum';
+import { PulseChain } from '../chains/pulsechain/pulsechain';
 import { Solana } from '../chains/solana/solana';
 import { connectorsConfig } from '../config/routes/getConnectors';
 import { PoolInfo as AmmPoolInfo } from '../schemas/amm-schema';
@@ -20,12 +21,12 @@ interface PoolInfoResult {
 /**
  * Get chain type for a connector from config
  */
-function getConnectorChain(connector: string): 'solana' | 'ethereum' | null {
+function getConnectorChain(connector: string): 'solana' | 'ethereum' | 'pulsechain' | null {
   const config = connectorsConfig.find((c) => c.name === connector);
   if (!config) {
     return null;
   }
-  return config.chain as 'solana' | 'ethereum';
+  return config.chain as 'solana' | 'ethereum' | 'pulsechain';
 }
 
 /**
@@ -185,7 +186,16 @@ export async function resolveTokenSymbols(
     }
 
     // Get chain instance and tokens from local list only
-    const chain = chainType === 'solana' ? await Solana.getInstance(network) : await Ethereum.getInstance(network);
+    let chain;
+    if (chainType === 'solana') {
+      chain = await Solana.getInstance(network);
+    } else if (chainType === 'ethereum') {
+      chain = await Ethereum.getInstance(network);
+    } else if (chainType === 'pulsechain') {
+      chain = await PulseChain.getInstance(network);
+    } else {
+      throw new Error(`Unsupported chain type: ${chainType}`);
+    }
 
     // Use local token list only - don't fetch from blockchain
     const baseToken = await chain.getToken(baseTokenAddress);

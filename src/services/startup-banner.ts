@@ -1,5 +1,7 @@
 import { Ethereum } from '../chains/ethereum/ethereum';
 import { getEthereumNetworkConfig } from '../chains/ethereum/ethereum.config';
+import { PulseChain } from '../chains/pulsechain/pulsechain';
+import { getPulseChainNetworkConfig } from '../chains/pulsechain/pulsechain.config';
 import { Solana } from '../chains/solana/solana';
 import { getSolanaNetworkConfig } from '../chains/solana/solana.config';
 import { HeliusService } from '../rpc/helius-service';
@@ -20,6 +22,9 @@ export async function displayChainConfigurations(): Promise<void> {
 
     // Display Ethereum configuration
     await displayEthereumConfig();
+
+    // Display PulseChain configuration
+    await displayPulseChainConfig();
   } catch (error: any) {
     logger.warn(`Failed to display chain configurations: ${error.message}`);
   }
@@ -77,6 +82,48 @@ async function displaySolanaConfig(): Promise<void> {
     }
   } catch (error: any) {
     logger.debug(`Solana configuration not available: ${error.message}`);
+  }
+}
+
+/**
+ * Display PulseChain chain configuration
+ */
+async function displayPulseChainConfig(): Promise<void> {
+  try {
+    const config = ConfigManagerV2.getInstance();
+
+    // Try to get chain config directly
+    const defaultNetwork = config.get('pulsechain.defaultNetwork') || 'pulsechain';
+    const rpcProvider = config.get('pulsechain.rpcProvider');
+
+    // Get network config
+    const namespaceId = `pulsechain-${defaultNetwork}`;
+    const nodeURL = config.get(`${namespaceId}.nodeURL`);
+
+    // PulseChain doesn't have specialized RPC providers like Infura
+    // Always use nodeURL from config
+
+    if (!nodeURL) {
+      logger.debug('PulseChain configuration not available');
+      return;
+    }
+
+    // Initialize PulseChain instance and fetch current block number
+    try {
+      const pulsechain = await PulseChain.getInstance(defaultNetwork);
+      const blockNumber = await pulsechain.provider.getBlockNumber();
+
+      logger.info(
+        `📡 PulseChain (defaultNetwork: ${defaultNetwork}): Block #${blockNumber.toLocaleString()} - ${redactUrl(nodeURL)}`,
+      );
+    } catch (error: any) {
+      logger.info(
+        `📡 PulseChain (defaultNetwork: ${defaultNetwork}): Unable to fetch block number - ${redactUrl(nodeURL)}`,
+      );
+      logger.debug(`PulseChain block fetch error: ${error.message}`);
+    }
+  } catch (error: any) {
+    logger.debug(`PulseChain configuration not available: ${error.message}`);
   }
 }
 

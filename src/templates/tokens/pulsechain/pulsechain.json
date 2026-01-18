@@ -1,0 +1,72 @@
+[
+  {
+    "chainId": 369,
+    "name": "Wrapped Pulse",
+    "symbol": "WPLS",
+    "address": "0x8f0921f30555624143d427b340b1156914882c10",
+    "decimals": 18
+  },
+  {
+    "chainId": 369,
+    "name": "PulseX",
+    "symbol": "PLSX",
+    "address": "0x95b303987a60c71504d99aa1b13b4da07b0790ab",
+    "decimals": 18
+  },
+  {
+    "chainId": 369,
+    "name": "Dai Stablecoin",
+    "symbol": "DAI",
+    "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+    "decimals": 18
+  },
+  {
+    "chainId": 369,
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "decimals": 6
+  },
+  {
+    "chainId": 369,
+    "name": "Tether USD",
+    "symbol": "USDT",
+    "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "decimals": 6
+  },
+  {
+    "chainId": 369,
+    "name": "HEX",
+    "symbol": "HEX",
+    "address": "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
+    "decimals": 8
+  },
+  {
+    "chainId": 369,
+    "name": "PulseChain",
+    "symbol": "INC",
+    "address": "0x2c9023bbc572ff8dc2228d6c5dcb0e6c2f944c8c",
+    "decimals": 18
+  },
+  {
+    "chainId": 369,
+    "name": "Wrapped Bitcoin",
+    "symbol": "WBTC",
+    "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "decimals": 8
+  },
+  {
+    "chainId": 369,
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+    "decimals": 18
+  },
+  {
+    "chainId": 369,
+    "name": "Uniswap",
+    "symbol": "UNI",
+    "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+    "decimals": 18
+  }
+]

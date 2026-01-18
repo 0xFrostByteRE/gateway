@@ -98,6 +98,8 @@ export class PoolService {
         return SupportedChain.ETHEREUM;
       case 'solana':
         return SupportedChain.SOLANA;
+      case 'pulsechain':
+        return SupportedChain.PULSECHAIN;
       default:
         throw new Error(`Unsupported chain '${connectorInfo.chain}' for connector: ${connector}`);
     }
@@ -298,16 +300,16 @@ export class PoolService {
       } catch {
         throw new Error('Invalid Solana address');
       }
-    } else if (chain === SupportedChain.ETHEREUM) {
-      // Validate Ethereum addresses
+    } else if (chain === SupportedChain.ETHEREUM || chain === SupportedChain.PULSECHAIN) {
+      // Validate Ethereum/PulseChain addresses
       if (!ethers.utils.isAddress(pool.address)) {
-        throw new Error('Invalid Ethereum pool address');
+        throw new Error('Invalid Ethereum/PulseChain pool address');
       }
       if (!ethers.utils.isAddress(pool.baseTokenAddress)) {
-        throw new Error('Invalid Ethereum base token address');
+        throw new Error('Invalid Ethereum/PulseChain base token address');
       }
       if (!ethers.utils.isAddress(pool.quoteTokenAddress)) {
-        throw new Error('Invalid Ethereum quote token address');
+        throw new Error('Invalid Ethereum/PulseChain quote token address');
       }
     }
 

@@ -231,7 +231,7 @@ export class HardwareWalletService {
   /**
    * Verify that we can communicate with the Ledger device
    */
-  public async verifyConnection(chain: 'solana' | 'ethereum'): Promise<boolean> {
+  public async verifyConnection(chain: 'solana' | 'ethereum' | 'pulsechain'): Promise<boolean> {
     try {
       if (chain === 'solana') {
         await this.getSolanaAddress();

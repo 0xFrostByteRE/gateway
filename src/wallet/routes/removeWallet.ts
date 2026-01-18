@@ -3,6 +3,7 @@ import { Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
 
 import { Ethereum } from '../../chains/ethereum/ethereum';
+import { PulseChain } from '../../chains/pulsechain/pulsechain';
 import { Solana } from '../../chains/solana/solana';
 import { logger } from '../../services/logger';
 import {
@@ -42,6 +43,8 @@ export const removeWalletRoute: FastifyPluginAsync = async (fastify) => {
         validatedAddress = Ethereum.validateAddress(address);
       } else if (chain.toLowerCase() === 'solana') {
         validatedAddress = Solana.validateAddress(address);
+      } else if (chain.toLowerCase() === 'pulsechain') {
+        validatedAddress = PulseChain.validateAddress(address);
       } else {
         throw new Error(`Unsupported chain: ${chain}`);
       }

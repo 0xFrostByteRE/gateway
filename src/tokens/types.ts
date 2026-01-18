@@ -28,6 +28,11 @@ export interface SolanaToken extends Token {
   // Solana-specific fields can be added here if needed
 }
 
+export interface PulseChainToken extends Token {
+  // PulseChain-specific fields can be added here if needed
+  // chainId is derived from network configuration
+}
+
 // Token list format
 export interface TokenList {
   tokens: Token[];
@@ -40,6 +45,7 @@ export type TokenFileFormat = Token[];
 export enum SupportedChain {
   ETHEREUM = 'ethereum',
   SOLANA = 'solana',
+  PULSECHAIN = 'pulsechain',
 }
 
 // Chain validation

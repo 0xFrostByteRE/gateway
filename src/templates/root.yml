@@ -13,6 +13,10 @@ configurations:
     configurationPath: chains/solana.yml
     schemaPath: solana-chain-schema.json
 
+  $namespace pulsechain:
+    configurationPath: chains/pulsechain.yml
+    schemaPath: pulsechain-chain-schema.json
+
   # Ethereum networks
   $namespace ethereum-mainnet:
     configurationPath: chains/ethereum/mainnet.yml
@@ -59,6 +63,11 @@ configurations:
     configurationPath: chains/solana/devnet.yml
     schemaPath: solana-network-schema.json
 
+  # PulseChain networks
+  $namespace pulsechain-pulsechain:
+    configurationPath: chains/pulsechain/pulsechain.yml
+    schemaPath: pulsechain-network-schema.json
+
   # Connectors
   $namespace uniswap:
     configurationPath: connectors/uniswap.yml
@@ -91,6 +100,10 @@ configurations:
   $namespace pancakeswap-sol:
     configurationPath: connectors/pancakeswap-sol.yml
     schemaPath: pancakeswap-sol-schema.json
+
+  $namespace pulsex:
+    configurationPath: connectors/pulsex.yml
+    schemaPath: pulsex-schema.json
 
   # API Keys (centralized)
   $namespace apiKeys:

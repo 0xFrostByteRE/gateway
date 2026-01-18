@@ -14,6 +14,7 @@ import Fastify, { FastifyInstance } from 'fastify';
 
 // Routes
 import { ethereumRoutes } from './chains/ethereum/ethereum.routes';
+import { pulsechainRoutes } from './chains/pulsechain/pulsechain.routes';
 import { solanaRoutes } from './chains/solana/solana.routes';
 import { configRoutes } from './config/config.routes';
 import { register0xRoutes } from './connectors/0x/0x.routes';
@@ -22,6 +23,7 @@ import { meteoraRoutes } from './connectors/meteora/meteora.routes';
 import { orcaRoutes } from './connectors/orca/orca.routes';
 import { pancakeswapRoutes } from './connectors/pancakeswap/pancakeswap.routes';
 import { pancakeswapSolRoutes } from './connectors/pancakeswap-sol/pancakeswap-sol.routes';
+import { pulsexRoutes } from './connectors/pulsex/pulsex.routes';
 import { raydiumRoutes } from './connectors/raydium/raydium.routes';
 import { uniswapRoutes } from './connectors/uniswap/uniswap.routes';
 import { getHttpsOptions } from './https';
@@ -76,6 +78,10 @@ const swaggerOptions = {
       {
         name: '/chain/ethereum',
         description: 'Ethereum and EVM-based chain endpoints',
+      },
+      {
+        name: '/chain/pulsechain',
+        description: 'PulseChain endpoints',
       },
 
       // Connectors
@@ -240,6 +246,7 @@ const configureGatewayServer = () => {
     // Register chain routes
     app.register(solanaRoutes, { prefix: '/chains/solana' });
     app.register(ethereumRoutes, { prefix: '/chains/ethereum' });
+    app.register(pulsechainRoutes, { prefix: '/chains/pulsechain' });
 
     // Register DEX connector routes - organized by connector
 
@@ -274,6 +281,8 @@ const configureGatewayServer = () => {
     });
     app.register(pancakeswapRoutes.amm, { prefix: '/connectors/pancakeswap/amm' });
     app.register(pancakeswapRoutes.clmm, { prefix: '/connectors/pancakeswap/clmm' });
+    // PulseX routes
+    app.register(pulsexRoutes.amm, { prefix: '/connectors/pulsex/amm' });
 
     // PancakeSwap Solana routes
     app.register(pancakeswapSolRoutes, { prefix: '/connectors/pancakeswap-sol' });

@@ -228,6 +228,19 @@ export class TokenService {
         }
         break;
 
+      case SupportedChain.PULSECHAIN:
+        try {
+          // Validate PulseChain address format (same as Ethereum) - be lenient about checksum
+          if (!ethers.utils.isAddress(token.address)) {
+            throw new Error(`Invalid PulseChain address format`);
+          }
+          // Optionally checksum but don't require exact match
+          // Just ensure it's a valid Ethereum format address
+        } catch (error) {
+          throw new Error(`Invalid PulseChain address: ${error.message}`);
+        }
+        break;
+
       default:
         throw new Error(`Unsupported chain for validation: ${chain}`);
     }

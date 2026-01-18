@@ -12,6 +12,7 @@ import { executeSwap as pancakeswapAmmExecuteSwap } from '../../connectors/panca
 import { executeSwap as pancakeswapClmmExecuteSwap } from '../../connectors/pancakeswap/clmm-routes/executeSwap';
 import { executeSwap as pancakeswapRouterExecuteSwap } from '../../connectors/pancakeswap/router-routes/executeSwap';
 import { executeSwap as pancakeswapSolClmmExecuteSwap } from '../../connectors/pancakeswap-sol/clmm-routes/executeSwap';
+import { executeSwap as pulsexAmmExecuteSwap } from '../../connectors/pulsex/amm-routes/executeSwap';
 import { executeSwap as raydiumAmmExecuteSwap } from '../../connectors/raydium/amm-routes/executeSwap';
 import { executeSwap as raydiumClmmExecuteSwap } from '../../connectors/raydium/clmm-routes/executeSwap';
 
@@ -295,6 +296,11 @@ async function executeEthereumSwap(
       return await pancakeswapClmmExecuteSwap(walletAddress, network, baseToken, quoteToken, amount, side, slippagePct);
     } else if (providerKey === '0x/router') {
       return await zeroXRouterExecuteSwap(walletAddress, network, baseToken, quoteToken, amount, side, slippagePct);
+    } else if (providerKey === 'pulsex/amm') {
+      return await pulsexAmmExecuteSwap(walletAddress, network, baseToken, quoteToken, amount, side, slippagePct);
+    } else if (providerKey === 'pulsex/router') {
+      // For now, use AMM as PulseX doesn't have router
+      return await pulsexAmmExecuteSwap(walletAddress, network, baseToken, quoteToken, amount, side, slippagePct);
     }
 
     throw httpErrors.badRequest(`Unsupported swap provider: ${swapProvider}`);

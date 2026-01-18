@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import fse from 'fs-extra';
 
 import { Ethereum } from '../chains/ethereum/ethereum';
+import { PulseChain } from '../chains/pulsechain/pulsechain';
 import { Solana } from '../chains/solana/solana';
 import { updateDefaultWallet } from '../config/utils';
 import { ConfigManagerCertPassphrase } from '../services/config-manager-cert-passphrase';
@@ -43,7 +44,7 @@ export function validateChainName(chain: string): boolean {
   } catch (error) {
     // Fallback to hardcoded list if there's an error
     logger.warn(`Failed to get supported chains: ${error.message}. Using fallback list.`);
-    return ['ethereum', 'solana'].includes(chain.toLowerCase());
+    return ['ethereum', 'solana', 'pulsechain'].includes(chain.toLowerCase());
   }
 }
 
@@ -88,8 +89,23 @@ export async function addWallet(fastify: FastifyInstance, req: AddWalletRequest)
   let address: string | undefined;
   let encryptedPrivateKey: string | undefined;
 
-  // Default to mainnet-beta for Solana or mainnet for other chains
-  const network = req.chain === 'solana' ? 'mainnet-beta' : 'mainnet';
+  // Default network selection based on chain
+  const chainLower = req.chain.toLowerCase();
+  let network: string;
+  switch (chainLower) {
+    case 'solana':
+      network = 'mainnet-beta';
+      break;
+    case 'ethereum':
+      network = 'mainnet';
+      break;
+    case 'pulsechain':
+      network = 'pulsechain';
+      break;
+    default:
+      network = 'mainnet'; // fallback
+      break;
+  }
 
   try {
     connection = await getInitializedChain<Chain>(req.chain, network);
@@ -110,6 +126,11 @@ export async function addWallet(fastify: FastifyInstance, req: AddWalletRequest)
       address = connection.getKeypairFromPrivateKey(req.privateKey).publicKey.toBase58();
       // Further validate Solana address
       address = Solana.validateAddress(address);
+      encryptedPrivateKey = await connection.encrypt(req.privateKey, passphrase);
+    } else if (connection instanceof PulseChain) {
+      address = connection.getWalletFromPrivateKey(req.privateKey).address;
+      // Further validate PulseChain address
+      address = PulseChain.validateAddress(address);
       encryptedPrivateKey = await connection.encrypt(req.privateKey, passphrase);
     }
 
@@ -155,6 +176,8 @@ export async function removeWallet(fastify: FastifyInstance, req: RemoveWalletRe
       validatedAddress = Ethereum.validateAddress(req.address);
     } else if (req.chain.toLowerCase() === 'solana') {
       validatedAddress = Solana.validateAddress(req.address);
+    } else if (req.chain.toLowerCase() === 'pulsechain') {
+      validatedAddress = PulseChain.validateAddress(req.address);
     } else {
       // This should not happen due to validateChainName check, but just in case
       throw new Error(`Unsupported chain: ${req.chain}`);
@@ -188,6 +211,8 @@ export async function signMessage(fastify: FastifyInstance, req: SignMessageRequ
       validatedAddress = Ethereum.validateAddress(req.address);
     } else if (req.chain.toLowerCase() === 'solana') {
       validatedAddress = Solana.validateAddress(req.address);
+    } else if (req.chain.toLowerCase() === 'pulsechain') {
+      validatedAddress = PulseChain.validateAddress(req.address);
     } else {
       throw new Error(`Unsupported chain: ${req.chain}`);
     }
@@ -246,7 +271,7 @@ export async function getWallets(
     await mkdirIfDoesNotExist(walletPath);
 
     // Get only valid chain directories
-    const validChains = ['ethereum', 'solana'];
+    const validChains = ['ethereum', 'solana', 'pulsechain'];
     const allDirs = await getDirectories(walletPath);
     const chains = allDirs.filter((dir) => validChains.includes(dir.toLowerCase()));
 
@@ -268,6 +293,9 @@ export async function getWallets(
             } else if (chain.toLowerCase() === 'solana') {
               // Basic Solana address length check
               return address.length >= 32 && address.length <= 44;
+            } else if (chain.toLowerCase() === 'pulsechain') {
+              // PulseChain uses same address format as Ethereum
+              return /^0x[a-fA-F0-9]{40}$/i.test(address);
             }
             return false;
           } catch {
